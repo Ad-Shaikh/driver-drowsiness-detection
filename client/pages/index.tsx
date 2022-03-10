@@ -11,6 +11,7 @@ import {
   SimpleGrid,
   Button
 } from "@mantine/core";
+import { auth, signInWithGoogle } from "../firebase/firebase.utils";
 
 const Home: NextPage = () => {
   const [opened, setOpened] = useState(false);
@@ -43,6 +44,19 @@ const Home: NextPage = () => {
             </Button>
             <Button variant="subtle" color="teal">
               Logs
+            </Button>
+            <Button
+              variant="subtle"
+              color="teal"
+              onClick={() => {
+                signInWithGoogle().then((results) =>
+                  auth.onAuthStateChanged((user) => {
+                    console.log(user);
+                  })
+                );
+              }}
+            >
+              Login
             </Button>
           </SimpleGrid>
         </Navbar>
