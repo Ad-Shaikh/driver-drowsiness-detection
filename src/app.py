@@ -1,4 +1,5 @@
 from constants import *
+from utils import *
 import argparse
 import cv2
 import dlib
@@ -6,7 +7,6 @@ import time
 import imutils
 from imutils.video import VideoStream
 from imutils import face_utils
-
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-w", "--webcam", type=int, default=0,
@@ -17,8 +17,10 @@ args = vars(ap.parse_args())
 print("-> Loading the predictor and detector...")
 
 
-detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+detector = cv2.CascadeClassifier(
+    "../models/haarcascade_frontalface_default.xml")
+predictor = dlib.shape_predictor(
+    '../models/shape_predictor_68_face_landmarks.dat')
 
 
 print("-> Starting Video Stream")
@@ -46,3 +48,14 @@ while True:
 
             shape = predictor(gray, rect)
             shape = face_utils.shape_to_np(shape)
+
+            distance = lip_distance(shape)
+
+            lip = shape[48:60]
+            cv2.drawContours(frame, [lip], -1, (0, 255, 0), 1)
+
+            if (distance > YAWN_THRESH):
+                cv2.putText(frame, "Yawn Alert", (400, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            else:
+                alarm_status2 = False
