@@ -43,3 +43,7 @@ def final_ear(shape):
 
     ear = (leftEAR + rightEAR) / 2.0
     return (ear, leftEye, rightEye)
+
+
+def Slope(a, b, c, d):
+    return (d - b)/(c - a)
