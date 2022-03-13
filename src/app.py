@@ -59,3 +59,25 @@ while True:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             else:
                 alarm_status2 = False
+
+            eye = final_ear(shape)
+            ear = eye[0]
+            leftEye = eye[1]
+            rightEye = eye[2]
+
+            leftEyeHull = cv2.convexHull(leftEye)
+            rightEyeHull = cv2.convexHull(rightEye)
+            cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
+            cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
+
+            if ear < EYE_AR_THRESH:
+                COUNTER += 1
+
+                if COUNTER >= EYE_AR_CONSEC_FRAMES:
+                    cv2.putText(frame, "DROWSINESS ALERT!", (400, 30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                    cv2.imwrite("alert.png", frame)
+                    time.sleep(1.0)
+            else:
+                COUNTER = 0
+                alarm_status = False
