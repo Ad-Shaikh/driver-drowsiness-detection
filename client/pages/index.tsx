@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   AppShell,
   Burger,
@@ -11,11 +11,29 @@ import {
   SimpleGrid,
   Button
 } from "@mantine/core";
-import { auth, signInWithGoogle } from "../firebase/firebase.utils";
+import { auth, signInWithGoogle, signOut } from "../firebase/firebase.utils";
+import AuthUserContext from "../context/AuthUserContext";
 
 const Home: NextPage = () => {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
+  const { authUser, setAuthUser } = useContext(AuthUserContext);
+
+  console.log(authUser);
+
+  const handleLogin = () => {
+    if (!authUser) {
+      signInWithGoogle().then((results) =>
+        auth.onAuthStateChanged((user) => {
+          setAuthUser(user);
+        })
+      );
+    } else {
+      signOut().then(() => {
+        setAuthUser(null);
+      });
+    }
+  };
 
   return (
     <AppShell
@@ -45,18 +63,8 @@ const Home: NextPage = () => {
             <Button variant="subtle" color="teal">
               Logs
             </Button>
-            <Button
-              variant="subtle"
-              color="teal"
-              onClick={() => {
-                signInWithGoogle().then((results) =>
-                  auth.onAuthStateChanged((user) => {
-                    console.log(user);
-                  })
-                );
-              }}
-            >
-              Login
+            <Button variant="subtle" color="teal" onClick={handleLogin}>
+              {!authUser ? "Login" : "Logout"}
             </Button>
           </SimpleGrid>
         </Navbar>
