@@ -33,12 +33,17 @@ time.sleep(1.0)
 while True:
     frame = vs.read()
     frame = imutils.resize(frame, width=850)
+    # convert to grayscale colorspace
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     if not(yawn):
+        # https://docs.opencv.org/3.4/d1/de5/classcv_1_1CascadeClassifier.html#aaf8181cb63968136476ec4204ffca498
+        # https://www.geeksforgeeks.org/cropping-faces-from-images-using-opencv-python/
+        # arguments => image, scaleFactor, minNeighbors
         rects = detector.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(
             30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
 
+        # if face not found
         if(len(rects) == 0):
             cv2.putText(frame, "Face Not Found!", (10, 60),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -65,8 +70,10 @@ while True:
             leftEye = eye[1]
             rightEye = eye[2]
 
+            # https://docs.opencv.org/3.4/d3/dc0/group__imgproc__shape.html#ga014b28e56cb8854c0de4a211cb2be656
             leftEyeHull = cv2.convexHull(leftEye)
             rightEyeHull = cv2.convexHull(rightEye)
+            # https://www.geeksforgeeks.org/find-and-draw-contours-using-opencv-python/
             cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
             cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
 
@@ -81,3 +88,17 @@ while True:
             else:
                 COUNTER = 0
                 alarm_status = False
+
+            cv2.putText(frame, "EAR: {:.2f}".format(ear), (350, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            cv2.putText(frame, "YAWN: {:.2f}".format(distance), (500, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+    cv2.imshow("Frame", frame)
+    key = cv2.waitKey(1) & 0xFF
+
+    if key == ord("q"):
+        break
+
+cv2.destroyAllWindows()
+vs.stop()

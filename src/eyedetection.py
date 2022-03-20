@@ -11,9 +11,7 @@ def detect_one_face(im):
     # convert to grayscale colorspace
     gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
-    # https://docs.opencv.org/3.4/d1/de5/classcv_1_1CascadeClassifier.html#aaf8181cb63968136476ec4204ffca498
-    # https://www.geeksforgeeks.org/cropping-faces-from-images-using-opencv-python/
-    # arguments => image, scaleFactor, minNeighbors
+   
     faces = face_cascade.detectMultiScale(gray, 1.2, 3)
     # scaleFactor => how much the image size is reduced at each image scale => https://answers.opencv.org/question/10654/how-does-the-parameter-scalefactor-in-detectmultiscale-affect-face-detection/
     # minNeighbors Parameter specifying how many neighbors each candidate rectangle should have to retain it => https://stackoverflow.com/questions/22249579/opencv-detectmultiscale-minneighbors-parameter
