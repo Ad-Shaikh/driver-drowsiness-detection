@@ -60,7 +60,7 @@ while True:
             cv2.drawContours(frame, [lip], -1, (0, 255, 0), 1)
 
             if (distance > YAWN_THRESH):
-                cv2.putText(frame, "Yawn Alert", (400, 30),
+                cv2.putText(frame, "Yawn Alert", (650, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             else:
                 alarm_status2 = False
@@ -81,7 +81,7 @@ while True:
                 COUNTER += 1
 
                 if COUNTER >= EYE_AR_CONSEC_FRAMES:
-                    cv2.putText(frame, "DROWSINESS ALERT!", (400, 30),
+                    cv2.putText(frame, "DROWSINESS ALERT!", (100, 30),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                     cv2.imwrite("alert.png", frame)
                     time.sleep(1.0)
