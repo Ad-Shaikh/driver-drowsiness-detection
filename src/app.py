@@ -5,8 +5,17 @@ import cv2
 import dlib
 import time
 import imutils
+import RPi.GPIO as GPIO
 from imutils.video import VideoStream
 from imutils import face_utils
+
+#Disable warnings (optional)
+GPIO.setwarnings(False)
+#Select GPIO mode
+GPIO.setmode(GPIO.BCM)
+#Set buzzer - pin 23 as output
+buzzer=23 
+GPIO.setup(buzzer,GPIO.OUT)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-w", "--webcam", type=int, default=0,
@@ -83,10 +92,12 @@ while True:
                 if COUNTER >= EYE_AR_CONSEC_FRAMES:
                     cv2.putText(frame, "DROWSINESS ALERT!", (100, 30),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                    GPIO.output(buzzer,GPIO.HIGH)
                     cv2.imwrite("alert.png", frame)
                     time.sleep(1.0)
             else:
                 COUNTER = 0
+                GPIO.output(buzzer,GPIO.LOW)
                 alarm_status = False
 
             cv2.putText(frame, "EAR: {:.2f}".format(ear), (350, 30),
