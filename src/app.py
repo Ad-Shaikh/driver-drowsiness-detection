@@ -56,7 +56,8 @@ while True:
         if(len(rects) == 0):
             cv2.putText(frame, "Face Not Found!", (10, 60),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
+            GPIO.output(buzzer,GPIO.LOW)
+            
         for (x, y, w, h) in rects:
             rect = dlib.rectangle(int(x), int(y), int(x + w), int(y + h))
 
